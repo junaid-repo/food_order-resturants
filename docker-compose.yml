@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  hotel:
+    container_name: hotel_app
+    image: swigato/hotel_app:1.0.0
+    build: .
+    ports:
+      - 7070:7070
+    environment:
+      - DATABASE_URL=jdbc:postgresql://java_db3:5431/hotel
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+    depends_on:
+      - java_db3
+
+  java_db3:
+    container_name: java_db3
+    image: postgres:12
+    expose:
+      - "5431"
+    ports:
+      - "5431:5431"
+    command: -p 5431
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hotel
+      PGDATA: /data/postgres
+    volumes:
+      - ./java_db3:/data/postgres
+
+volumes:
+  pgdata: {}
